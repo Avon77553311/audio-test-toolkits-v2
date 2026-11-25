@@ -1,0 +1,2 @@
+# Install torch/torchaudio CPU wheels first, then this file.
+demucs==4.0.1

@@ -1,0 +1,6 @@
+# Tested together for librosa onset detection in the Linux release image.
+numpy==1.26.4
+scipy==1.17.1
+librosa==0.11.0
+numba==0.61.2
+llvmlite==0.44.0
