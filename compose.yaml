@@ -1,0 +1,35 @@
+name: audio-toolkit-short
+services:
+  studio:
+    image: ${STUDIO_IMAGE:-audio-toolkit:linux-amd64-20261023}
+    platform: linux/amd64
+    init: true
+    restart: unless-stopped
+    stop_grace_period: 45s
+    environment:
+      STUDIO_ACCESS_MODE: lan-public
+      STUDIO_ENABLE_PAID: "false"
+      STUDIO_PYTHON: /usr/local/bin/python
+      STUDIO_PUBLIC_URL: http://${STUDIO_HOST_IP:-127.0.0.1}:${STUDIO_PORT:-9174}
+    ports:
+      - "${STUDIO_BIND_IP:-0.0.0.0}:${STUDIO_PORT:-9174}:8080"
+    volumes:
+      - short-data:/opt/audio-studio/runtime
+      - ./dist:/opt/audio-studio/dist:ro
+      - ./server/audio-studio-server.jar:/opt/audio-studio/server/audio-studio-server.jar:ro
+      - ./worker:/opt/audio-studio/worker:ro
+      - ./runtime/models:/opt/audio-studio/runtime/models:ro
+      - ./runtime/torch/hub/checkpoints:/opt/audio-studio/model-cache/torch/hub/checkpoints:ro
+    healthcheck:
+      test: ["CMD", "python", "-c", "import json,urllib.request; r=json.load(urllib.request.urlopen('http://127.0.0.1:8080/api/health',timeout=5)); assert r['audioBackendConnected']"]
+      interval: 15s
+      timeout: 8s
+      start_period: 60s
+      retries: 6
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+volumes:
+  short-data:

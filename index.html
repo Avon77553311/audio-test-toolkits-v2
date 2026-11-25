@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#252e37" />
+    <script>
+      (() => {
+        let choice = 'light';
+        try { const saved = localStorage.getItem('audio-studio-theme'); if (['dark', 'light', 'system'].includes(saved)) choice = saved; } catch {}
+        const theme = choice === 'system' ? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') : choice;
+        document.documentElement.dataset.theme = theme;
+        document.documentElement.dataset.themePreference = choice;
+        document.documentElement.style.colorScheme = theme;
+        document.querySelector('meta[name="theme-color"]').content = theme === 'dark' ? '#252e37' : '#dce3eb';
+      })();
+    </script>
+    <meta name="description" content="Audio Toolkit Short：音轨分离、音频转 MIDI、和弦分析，局域网音频工作站。" />
+    <title>Audio Toolkit Short · 经典音频工作站</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  </head>
+  <body><div id="app"></div><script type="module" src="/src/main.ts"></script></body>
+</html>
